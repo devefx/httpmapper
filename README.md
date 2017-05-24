@@ -1,5 +1,7 @@
 # httpmapper
 
+<a href="http://jq.qq.com/?_wv=1027&k=2JEFdFZ" target="_blank">【Java技术交流群】</a>
+
 ## 构建源码
 
   执行命令前请确保已经安装`git`和`maven`命令
