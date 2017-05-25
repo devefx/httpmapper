@@ -120,10 +120,25 @@ public class MapperMethod {
 				requestEntity.setUrl(uri);
 			}
 			
+			if (logger.isInfoEnabled()) {
+				String preStr = command.getName() + " ====> ";
+				logger.info(preStr + "Request: " + requestEntity.getUrl());
+				logger.info(preStr + "Parameters: " + requestEntity.getBody());
+				logger.info(preStr + "Headers: " + requestEntity.getHeaders());
+			}
+			
 			ResponseEntity<JsonNode> responseEntity = restTemplate.exchange(requestEntity.getUrl(), requestEntity.getMethod(),
 					new HttpEntity<>(requestEntity.getBody(), requestEntity.getHeaders()), JsonNode.class);
 			
-			printLog(requestEntity, responseEntity);
+			if (logger.isInfoEnabled()) {
+				StringBuffer buf = new StringBuffer();
+				buf.append(command.getName() + " ====> ");
+				buf.append("Response: [status=").append(responseEntity.getStatusCode()).append("] ");
+				if (responseEntity.hasBody()) {
+					buf.append(responseEntity.getBody());
+				}
+				logger.info(buf.toString());
+			}
 			
 			if (responseEntity != null) {
 				org.devefx.httpmapper.http.ResponseEntity entity = new org.devefx.httpmapper.http.ResponseEntity(responseEntity.getBody(),
@@ -176,25 +191,6 @@ public class MapperMethod {
 		}
 		UriComponents uriComponents = builder.build();
 		return uriComponents.toUri();
-	}
-	
-	private void printLog(RequestEntity requestEntity, ResponseEntity<JsonNode> responseEntity) {
-		// print invoke log..
-		if (logger.isInfoEnabled()) {
-			String preStr = command.getName() + " ====> ";
-			
-			logger.info(preStr + "Request: " + requestEntity.getUrl());
-			logger.info(preStr + "Parameters: " + requestEntity.getBody());
-			logger.info(preStr + "Headers: " + requestEntity.getHeaders());
-			
-			StringBuffer buf = new StringBuffer();
-			buf.append(preStr);
-			buf.append("Response: [status=").append(responseEntity.getStatusCode()).append("] ");
-			if (responseEntity.hasBody()) {
-				buf.append(responseEntity.getBody());
-			}
-			logger.info(buf.toString());
-		}
 	}
 	
 	public static class HttpCommand {
